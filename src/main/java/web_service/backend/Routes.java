@@ -24,7 +24,7 @@ public class Routes implements SparkApplication {
     	CorsFilter corsfilter = new CorsFilter();
     	corsfilter.apply(); // All cross origin resource sharing for each of these routes
         get("/simArtists/:name", (req, res) -> gson.toJson(service.findSimilarArtists(URLDecoder.decode(req.params("name")))));
-        get("/simSongs/:title", (req, res) -> gson.toJson(service.findSimilarSongs(URLDecoder.decode(req.params("title")))));
+        get("/simSongs/:title/:artist", (req, res) -> gson.toJson(service.findSimilarSongs(URLDecoder.decode(req.params("title")),URLDecoder.decode(req.params("artist")))));
         get("/tag/:tags", (req, res) -> gson.toJson(service.findTag(URLDecoder.decode(req.params("tags")))));
         get("/song/artist/:title/:name", (req, res) -> gson.toJson(service.findSongwithartist(req.params("title"),req.params("name"))));
         get("/songdetails/:type/:title/:name", (req, res) -> gson.toJson(service.findSongDetailsWithArtist(req.params("type"),req.params("title"),req.params("name"))));

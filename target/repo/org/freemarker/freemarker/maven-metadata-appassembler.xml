@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.freemarker</groupId>
+  <artifactId>freemarker</artifactId>
+  <versioning>
+    <release>2.3.26-incubating</release>
+    <versions>
+      <version>2.3.26-incubating</version>
+    </versions>
+    <lastUpdated>20180330193140</lastUpdated>
+  </versioning>
+</metadata>

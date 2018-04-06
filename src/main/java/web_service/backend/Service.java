@@ -103,15 +103,17 @@ public class Service {
 
 	}
 
-	public Iterable<Map<String, Object>> findSimilarSongs(String title) {
+	public Iterable<Map<String, Object>> findSimilarSongs(String title, String artistName) {
 		if (title == null)
 			return Collections.emptyList();
 
 		try {
 			return Iterators.asCollection(cypher.query(
-					"MATCH (song:SONG{title:{title}})-[:SIMILAR_TO]->(simSong:SONG)									MATCH (simSong)<-[:PERFORMS]-(artist:ARTIST)															MATCH (simSong)-[:IN_ALBUM]->(album:ALBUM)\n"
+					"MATCH (song:SONG{title:{title}})-[:SIMILAR_TO]->(simSong:SONG)"
+					+ "MATCH (a:ARTIST{name:{artistName}})-[:PERFORMS]->(song)"
+					+ "MATCH (simSong)<-[:PERFORMS]-(artist:ARTIST)															MATCH (simSong)-[:IN_ALBUM]->(album:ALBUM)\n"
 							+ "return simSong.title, artist.name, album.name",
-					map("title", title)));
+					map("title", title, "artistName",artistName)));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -205,21 +207,28 @@ public class Service {
 
 	public List<Map<String, Object>> findAlbum(String albumName, String artistName) {
 
-		List<Map<String, Object>> ImageList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> albumList = new ArrayList<Map<String, Object>>();
 		if (albumName == null || artistName == null) {
-			ImageList.add(Collections.emptyMap());
+			albumList.add(Collections.emptyMap());
 		} else {
-
 			Map<String, Object> imageList = new HashMap<String, Object>();
+			Map<String, Object> songList = new HashMap<String, Object>();
 			try {
 				imageList = getAlbumSpotify(albumName, artistName);
+				songList = Iterators.singleOrNull(cypher.query(
+						"MATCH(album:ALBUM{name:{albumName}})<-[:HAS_ALBUM]-(artist:ARTIST{name:{artistName}})										"
+						+ "MATCH(song)-[:IN_ALBUM]->(album)  "
+						+ "return collect(song.title) as Songs,artist.name,album.name",
+						map("artistName", artistName, "albumName", albumName)));
 			} catch (Exception e) {
+				songList = Collections.emptyMap();
 				imageList = Collections.emptyMap();
 				e.printStackTrace();
 			}
-			ImageList.add(imageList);
+			albumList.add(imageList);
+			albumList.add(songList);
 		}
-		return ImageList;
+		return albumList;
 	}
 
 	/*

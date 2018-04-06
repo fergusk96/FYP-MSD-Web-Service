@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.neo4j.example</groupId>
+  <artifactId>neo4j-movies</artifactId>
+  <versioning>
+    <versions>
+      <version>3.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20180330193141</lastUpdated>
+  </versioning>
+</metadata>
