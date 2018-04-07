@@ -32,7 +32,7 @@ public class BoltCypherExecutor implements CypherExecutor {
 
     	boolean hasPassword = password != null && !password.isEmpty();
         AuthToken token = hasPassword ? AuthTokens.basic("neo4j", "qwerty") : AuthTokens.none();
-        driver = GraphDatabase.driver("http://fc741d94.ngrok.io", token, Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig());
+        driver = GraphDatabase.driver("bolt://localhost", token, Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig());
         
 
 
