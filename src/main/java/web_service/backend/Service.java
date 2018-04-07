@@ -5,6 +5,8 @@ import static org.neo4j.helpers.collection.MapUtil.map;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -157,9 +159,14 @@ public class Service {
 					+ "WITH song, size(tags) as inputCnt, count(DISTINCT tag) as cnt\n" + "WHERE cnt = inputCnt\n"
 					+ " OPTIONAL MATCH(song)<-[:PERFORMS]-(artist:ARTIST)" + "RETURN song,artist limit 100",
 					map("myTags", myTags)));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Collections.emptyList();
+		} 
+			catch(Exception e) {
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+				String sStackTrace = sw.toString(); // stack trace as a string
+
+			return (Iterable<Map<String, Object>>) map("error", sStackTrace);
 		}
 	}
 
@@ -171,7 +178,7 @@ public class Service {
 	 */
 
 	public List<Iterable<Map<String, Object>>> findSongwithartist(String title, String name) {
-
+		
 		if (title == null)
 			return Collections.emptyList();
 
